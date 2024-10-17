@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Jobs\SendUserWelcomeEmail;
 use Illuminate\Http\Request;
 use App\Models\Employee;
 use Carbon\Carbon;
@@ -25,6 +25,7 @@ class EmployeeController extends Controller
 
     public function store(Request $request)
     {
+
         $request->validate([
             'name' => 'required|unique:employees,name',
             'email' => 'required|unique:employees,email|email',
@@ -34,7 +35,9 @@ class EmployeeController extends Controller
         ], [
             'joining_date.before' => 'You must be at least 18 years old.',
         ]);
-        Employee::create([
+
+
+        $employee = Employee::create([
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
@@ -43,7 +46,11 @@ class EmployeeController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        return redirect()->route('employees.index')->with('success', 'User created successfully.');
+
+        SendUserWelcomeEmail::dispatch($employee);
+
+
+        return redirect()->route('employees.index')->with('success', 'Employee created and welcome email sent.');
     }
 
     public function show($id)
