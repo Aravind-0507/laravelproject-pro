@@ -20,10 +20,10 @@ return new class extends Migration
             $table->boolean('is_active')->default(false);
             $table->integer('role')->default(1);
             $table->string('password'); 
+            $table->timestamp('expires_at')->useCurrent(); // New expires_at column with current timestamp
             $table->timestamps();
         });
     }
-
     /**
      * Reverse the migrations.
      */

@@ -2,7 +2,7 @@
 
 namespace App\Exports;
 
-use App\Models\Employee; 
+use App\Models\Employee;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
@@ -15,7 +15,7 @@ class UsersExport implements FromCollection, WithHeadings
      */
     public function collection()
     {
-        return Employee::all(['id', 'name', 'email', 'joining_date', 'is_active','phone']); // Adjust fields as necessary
+        return Employee::all(['id', 'name', 'email', 'joining_date', 'is_active', 'phone']); // Adjust fields as necessary
     }
 
     /**
@@ -25,6 +25,6 @@ class UsersExport implements FromCollection, WithHeadings
      */
     public function headings(): array
     {
-        return ['ID', 'Name', 'Email', 'Date of Birth', 'Status','phone']; 
+        return ['ID', 'Name', 'Email', 'Date of Birth', 'Status', 'phone'];
     }
 }

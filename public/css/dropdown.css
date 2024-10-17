@@ -1,0 +1,53 @@
+.sidenav {
+    height: 100%;
+    width: 200px;
+    position: fixed;
+    top: 60px;
+    left: 0;
+    background-color: #111;
+    padding-top: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+    overflow-y: auto;
+}
+.sidenav a {
+    padding: 10px 15px;
+    text-decoration: none;
+    font-size: 18px;
+    color: #f8f9fa;
+    display: block;
+    transition: background-color 0.3s;
+}
+.sidenav a:hover {
+    background-color: blue;
+}
+nav {
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+}
+.profile-icon {
+    position: relative;
+    margin-left: 20px;
+}
+.dropdown {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 40px;
+    background-color: white;
+    min-width: 160px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+.dropdown a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+.dropdown a:hover {
+    background-color: #f1f1f1;
+}

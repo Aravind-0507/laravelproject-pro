@@ -3,31 +3,30 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User; 
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash; 
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
-    
+
     public function edit()
-{
-    return view('profile.edit');
-}
+    {
+        return view('profile.edit');
+    }
     public function update(Request $request)
     {
         $user = Auth::user();
-
-        // Validate the form data
+        
         $validatedData = $request->validate([
             'name' => 'required|string|max:100',
             'email' => 'required|string|email|max:255|unique:employees,email,' . $user->id,
-            'password' => 'nullable|string|min:8|confirmed', 
+            'password' => 'nullable|string|min:8|confirmed',
         ]);
 
         $changes = false;
 
-      
+
         if ($user->name !== $request->name) {
             $user->name = $request->name;
             $changes = true;
@@ -50,7 +49,7 @@ class ProfileController extends Controller
             return redirect()->back()->withErrors(['error' => 'No changes were made.']);
         }
 
-     
+
         try {
             $user->save();
         } catch (\Exception $e) {
@@ -59,5 +58,5 @@ class ProfileController extends Controller
         return redirect()->route('employees.index')->with('success', 'Profile updated successfully!');
     }
 
-    
+
 }

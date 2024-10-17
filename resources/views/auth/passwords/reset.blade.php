@@ -5,59 +5,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reset Password</title>
-    <link rel="stylesheet" href="{{asset('css/myfile.css')}}">
     <style>
         body {
             font-family: "Lato", sans-serif;
             margin: 0;
             background-color: #f0f2f5;
-            /* Light background */
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            /* Full height */
         }
 
         .container {
             background-color: white;
-            /* White background for the container */
             padding: 40px;
             border-radius: 10px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            width: 400px;
-            /* Fixed width */
+            width: 100%;
+            max-width: 400px;
             text-align: center;
-            /* Center text */
         }
 
         h1 {
             font-size: 24px;
             margin-bottom: 20px;
-            /* Space below the title */
+            color: #343a40;
         }
 
+        input[type="password"],
         input[type="email"] {
             width: 100%;
-            /* Full width input */
             padding: 12px;
             border: 1px solid #ddd;
             border-radius: 8px;
             font-size: 14px;
             outline: none;
             margin-bottom: 15px;
-            /* Space below the input */
-            transition: border-color 0.3s;
+            transition: border-color 0.3s, box-shadow 0.3s;
         }
 
-        input[type="email"]:focus {
+        input[type="email"]:focus,
+        input[type="password"]:focus {
             border-color: #007bff;
-            /* Focused input border color */
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
         }
 
         button {
             width: 100%;
-            /* Full width button */
             padding: 12px;
             background-color: #007bff;
             color: white;
@@ -66,29 +60,25 @@
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, transform 0.2s;
         }
 
         button:hover {
             background-color: #0056b3;
-            /* Darker shade on hover */
+            transform: translateY(-2px);
         }
 
-        /* Success and Error Messages */
-        .success-message {
-            color: green;
-            margin-top: 10px;
-        }
-
-        .error-message {
-            color: red;
-            margin-top: 10px;
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
         }
 
         ul {
             padding-left: 0;
             list-style-type: none;
-            /* Remove bullet points */
         }
     </style>
 </head>
@@ -98,25 +88,8 @@
     <div class="container">
         <h1>Reset Password</h1>
 
-        <!-- Password Reset Form -->
-        <form action="{{ route('password.email') }}" method="POST">
-            @csrf
-            <input type="email" name="email" placeholder="Enter your email" required>
-            <button type="submit">Send Password Reset Link</button><br>
-            <br>
-            <a href="{{route('home')}}" class="btn btn-success"> Back</a>
-        </form>
-
-        <!-- Success Message -->
-        @if (session('status'))
-            <div class="success-message">
-                <p>{{ session('status') }}</p>
-            </div>
-        @endif
-
-        <!-- Error Message -->
         @if ($errors->any())
-            <div class="error-message">
+            <div class="alert alert-danger">
                 <ul>
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
@@ -124,6 +97,24 @@
                 </ul>
             </div>
         @endif
+
+
+        @if (isset($errors) && count($errors) > 0)
+            <div id="error-message" class="alert alert-danger" style="display: none;">
+                <ul>
+                    @foreach ($errors as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+        <form action="{{ route('password.update') }}" method="POST">
+            @csrf
+            <input type="email" name="email" placeholder="Enter your Email" value="{{ old('email') }}" required>
+            <input type="password" name="password" placeholder="Enter your new password" required>
+            <input type="password" name="password_confirmation" placeholder="Confirm your new password" required>
+            <button type="submit">Reset Password</button>
+        </form>
     </div>
 </body>
 

@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\namespace;
 
 class User extends Authenticatable
 {
@@ -16,7 +17,7 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $fillable = ['name', 'email', 'password','joining_date','phone','role','is_active'];
+    protected $fillable = ['name', 'email', 'password','joining_date','phone','role','is_active','password_reset_sent_at'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -40,5 +41,10 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    protected $casts = [
+        'expires_at' => 'datetime',
+    ];
+    
+    
     
 }

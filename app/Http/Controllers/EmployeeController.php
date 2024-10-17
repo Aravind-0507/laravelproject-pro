@@ -10,9 +10,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class EmployeeController extends Controller
 {
-    public function index() 
+    public function index()
     {
-        
+
         $employees = Employee::all();
 
         return view('employees.index', compact('employees'));
@@ -28,32 +28,30 @@ class EmployeeController extends Controller
         $request->validate([
             'name' => 'required|unique:employees,name',
             'email' => 'required|unique:employees,email|email',
-            'joining_date' => 'required|date|before:' . Carbon::now()->subYears(18)->toDateString(), 
+            'joining_date' => 'required|date|before:' . Carbon::now()->subYears(18)->toDateString(),
             'phone' => 'required|numeric',
-            'password' => 'required|string|min:8', 
+            'password' => 'required|string|min:8',
         ], [
-            'joining_date.before' => 'You must be at least 18 years old.', 
+            'joining_date.before' => 'You must be at least 18 years old.',
         ]);
-        // dd($request->phone);
         Employee::create([
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
             'joining_date' => $request->joining_date,
             'is_active' => $request->is_active ? true : false,
-            'password' => Hash::make($request->password), 
+            'password' => Hash::make($request->password),
         ]);
-            // dd($request->phone);
+
         return redirect()->route('employees.index')->with('success', 'User created successfully.');
     }
 
     public function show($id)
     {
-        // Fetch the employee from the database
-        $employee = Employee::findOrFail($id); // Ensure to replace 'Employee' with your actual model
-    
-        // Pass the employee data to the view
-        return view('employees.show', compact('employee')); // Ensure the view name matches your file
+
+        $employee = Employee::findOrFail($id);
+
+        return view('employees.show', compact('employee'));
     }
 
     public function edit(Employee $employee)
@@ -68,8 +66,8 @@ class EmployeeController extends Controller
             'email' => 'required|email|unique:employees,email,' . $employee->id,
             'phone' => 'required|numeric|digits:10|unique:employees,phone,' . $employee->id,
             'joining_date' => 'required|date|before:' . Carbon::now()->subYears(18)->toDateString(),
-            'is_active' => 'nullable|boolean', 
-            'password' => 'nullable|string|min:8', 
+            'is_active' => 'nullable|boolean',
+            'password' => 'nullable|string|min:8',
         ]);
 
         $data = $request->all();
@@ -77,7 +75,7 @@ class EmployeeController extends Controller
         if (isset($data['password'])) {
             $data['password'] = Hash::make($data['password']);
         } else {
-            unset($data['password']); 
+            unset($data['password']);
         }
 
         $employee->update($data);
@@ -89,12 +87,11 @@ class EmployeeController extends Controller
     {
         $employee->delete();
         return redirect()->route('employees.index')->with('success', 'User deleted successfully.');
-    } 
+    }
 
     public function getData()
     {
         $employees = Employee::all();
         return response()->json($employees);
     }
-
 }
