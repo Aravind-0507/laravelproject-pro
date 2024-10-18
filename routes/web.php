@@ -7,8 +7,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\PasswordController;
-use App\Mail\WelcomeEmail;
-use Illuminate\Support\Facades\Mail;
+
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -48,9 +47,3 @@ Route::get('password/expired', function () {
     return view('auth.passwords.expired'); // Create a view for expired token
 })->name('password.expired');
 
-Route::get('/send-test-email', function () {
-    $user = App\Models\User::first(); // Use an existing user for testing
-    Mail::to($user->email)->send(new App\Mail\WelcomeEmail($user));
-
-    return 'Test email sent!';
-});

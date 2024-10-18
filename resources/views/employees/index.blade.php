@@ -10,14 +10,14 @@
     <nav>
         <h2 style="margin: 0;">Welcome!</h2>
         <div class="profile-icon" style="position: relative;">
-        <i class="fas fa-user-circle" id="profile-icon" style="font-size: 30px; cursor: pointer;"> </i>
-        <div class="dropdown" id="dropdown-menu">
-        <a href="{{ route('profile.edit') }}">Update</a>
-        <form method="POST" action="{{ route('logout') }}">
-        @csrf
-        <a href="#" onclick="event.preventDefault(); this.closest('form').submit();">Logout</a>
-        </form>
-        </div>
+            <i class="fas fa-user-circle" id="profile-icon" style="font-size: 30px; cursor: pointer;"> </i>
+            <div class="dropdown" id="dropdown-menu">
+                <a href="{{ route('profile.edit') }}">Update</a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <a href="#" onclick="event.preventDefault(); this.closest('form').submit();">Logout</a>
+                </form>
+            </div>
         </div>
     </nav>
 </header>

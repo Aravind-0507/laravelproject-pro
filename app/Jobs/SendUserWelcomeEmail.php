@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Jobs;
-
 use App\Mail\WelcomeEmail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -27,17 +26,12 @@ class SendUserWelcomeEmail implements ShouldQueue
         $this->employee = $employee;
     }
 
-    /**
-     * Execute the job.
-     */
-
-
     public function handle()
     {
         try {
             if (!empty($this->employee->email)) {
                 Log::info('Sending welcome email to ' . $this->employee->email);
-                Mail::to($this->employee->email)->send(new WelcomeEmail($this->employee));
+                Mail::to(users: $this->employee->email)->send(new WelcomeEmail($this->employee));
                 Log::info('Welcome email sent successfully to ' . $this->employee->email);
             } else {
                 Log::error('Failed to send welcome email: No email address provided for employee.');
