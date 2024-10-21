@@ -18,13 +18,13 @@
     <form action="{{ route('stocks.storeAssignedStocks', $user->id) }}" method="POST">
         @csrf
         <div class="form-group">
-    <label for="stocks">Select Stocks:</label>
-    <select name="stocks[]" id="stocks" multiple class="form-control" required>
-        @foreach($stocks as $stock)
-            <option value="{{ $stock->id }}">{{ $stock->name }} (Available: {{ $stock->quantity }})</option>
-        @endforeach
-    </select>
-</div>
+            <label for="stocks">Select Stocks:</label>
+            <select name="stocks[]" id="stocks" multiple class="form-control" required>
+                @foreach($stocks as $stock)
+                    <option value="{{ $stock->id }}">{{ $stock->name }} (Available: {{ $stock->quantity }})</option>
+                @endforeach
+            </select>
+        </div>
 
 
 </div>
@@ -32,23 +32,22 @@
 <div id="selected-stocks" class="mt-3">
     <ul id="stock-list"></ul>
 </div>
-        <div class="form-group">
-            <label for="assigned_quantity">Assigned Quantity:</label>
-            <input type="number" name="assigned_quantity" id="assigned_quantity" class="form-control" required>
-        </div>
+<div class="form-group">
+    <label for="assigned_quantity">Assigned Quantity:</label>
+    <input type="number" name="assigned_quantity" id="assigned_quantity" class="form-control" required>
+</div>
 
-        <div class="form-group">
+<div class="form-group">
     <label for="is_active">Is Active:</label>
     <select name="is_active" id="is_active" class="form-control" required>
         <option value="1">Yes</option>
         <option value="0">No</option>
-    </select>   
+    </select>
 </div>
-
-
-        <button type="submit" class="btn btn-primary">Assign Stocks</button>
-        <a href="{{route('stocks.index')}}" class="btn btn-danger">Back to Stock list</a>
-    </form>
+<br>
+<button type="submit" class="btn btn-primary">Assign Stocks</button>
+<a href="{{route('stocks.index')}}" class="btn btn-danger">Back to Stock list</a>
+</form>
 </div>
 
 <style>
@@ -106,7 +105,7 @@
     }
 </style>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('#stocks').select2({
             placeholder: "Select stocks",
             allowClear: true

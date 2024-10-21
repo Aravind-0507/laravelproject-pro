@@ -107,6 +107,6 @@
     </form>
 </div>
 
-<a href="{{route('stocks.index')}}" class="btn btn-danger">Back to Stock list</a>
+<a href="{{route('stocks.index')}}" class="btn btn-warning btn-sm mx-2"> Back to Stock list</a>
 
 @endsection
