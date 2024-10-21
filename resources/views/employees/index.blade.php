@@ -3,7 +3,10 @@
 @section('content')
 
 <div class="sidenav">
-    <a href="{{ route('employees.index') }}">Users List</a>
+    <a href="{{ route('employees.index') }}">Users List</a><br>
+    <a href="{{route('stocks.index')}}">Stock</a>
+  
+ 
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <header>
@@ -69,6 +72,8 @@
                                             {{ $employee->is_active == 1 ? 'Active' : 'Inactive' }}
                                         </span>
                                     </td>
+
+
                                     <td>
                                         <div class="d-inline">
                                             <a href="{{ route('employees.show', $employee->id) }}"
@@ -82,6 +87,7 @@
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger btn-sm mx-1">Delete</button>
                                             </form>
+
                                         </div>
                                     </td>
                                 </tr>
@@ -117,9 +123,9 @@
                 row.style.display = "none";
             }
         });
-
         paginate(filteredRows);
     }
+
     function paginate(filteredRows) {
         const paginationDiv = document.getElementById("pagination");
 

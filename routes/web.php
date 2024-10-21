@@ -7,7 +7,9 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\PasswordController;
-
+use App\Http\Controllers\StockController;
+use App\Http\Controllers\UserController;
+use App\Models\Stock;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -44,6 +46,27 @@ Route::post('password/reset', [PasswordController::class, 'reset'])->name('passw
 Route::post('', [WelcomeController::class, 'logout'])->name('logout');
 
 Route::get('password/expired', function () {
-    return view('auth.passwords.expired'); // Create a view for expired token
+    return view('auth.passwords.expired'); 
 })->name('password.expired');
 
+
+// Route::post('stocks/assign', [StockController::class, 'assign'])->name('stocks.assign');
+// Route::get('/stocks', [StockController::class, 'index'])->name('stocks.index'); 
+// Route::post('/stocks', [StockController::class, 'store'])->name('stocks.store'); 
+// Route::post('/stocks/create', [StockController::class, 'create'])->name('stocks.create'); 
+// Route::post('/stocks/edit', [StockController::class, 'edit'])->name('stocks.edit'); 
+// Route::post('/stocks/destroy', [StockController::class, 'delete'])->name('stocks.destroy'); 
+
+Route::resource('stocks', StockController::class);
+
+
+Route::get('users/{user}/assign-stocks', [StockController::class, 'assignStocks'])
+    ->name('stocks.assign');
+
+Route::post('users/{user}/assign-stocks', [StockController::class, 'storeAssignedStocks'])
+    ->name('stocks.storeAssignedStocks');
+
+    Route::get('stocks/assign/{user}', [StockController::class, 'showAssignStocks'])->name('stocks.assign');
+    
+    Route::get('/users/{user}/assign-stocks', [StockController::class, 'assignStocksToUser'])
+    ->name('stocks.assign');
