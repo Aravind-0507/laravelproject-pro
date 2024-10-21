@@ -5,8 +5,6 @@
 <div class="sidenav">
     <a href="{{ route('employees.index') }}">Users List</a><br>
     <a href="{{route('stocks.index')}}">Stock</a>
-  
- 
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <header>

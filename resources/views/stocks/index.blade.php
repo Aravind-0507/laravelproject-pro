@@ -5,8 +5,6 @@
 <div class="sidenav">
     <a href="{{ route('employees.index') }}">Users List</a><br>
     <a href="{{ route('stocks.index') }}">Stock</a>
-    
-
 </div>
 
 <style>
@@ -156,16 +154,23 @@
 <div class="text-center">
     <a href="{{ route('stocks.create') }}" class="btn btn-success">Add Stock</a>
 </div>
-@foreach ($users as $user)
-        <td>
-            <a href="{{ route('stocks.assign', ['user' => $user->id]) }}" class="btn btn-primary">Assign Stocks</a>
-        </td>
-@endforeach
-<br>
+
 @if(session('success'))
     <div class="alert alert-success">{{ session('success') }}</div>
 @endif
+<br>
 
+<div class="row">
+    <div class="col-12 d-flex justify-content-between mb-3">
+        <input type="text" id="search" placeholder="Search stocks..." oninput="searchTable()" class="form-control"
+            style="width: 400px;">
+        <div>
+            @foreach ($users as $user)
+                <a href="{{ route('stocks.assign', ['user' => $user->id]) }}" class="btn btn-primary mx-1">Assign Stocks</a>
+            @endforeach
+        </div>
+    </div>
+</div>
 <div class="row mt-3">
     <div class="col-12">
         <div class="card">
@@ -181,7 +186,7 @@
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="stocksTableBody">
                         @foreach($stocks as $stock)
                             <tr>
                                 <td>{{ $stock->id }}</td>
@@ -207,9 +212,61 @@
                         @endforeach
                     </tbody>
                 </table>
+                <div class="d-flex justify-content-end align-items-center mt-3">
+                    <div id="pagination" class="pagination"></div>
+                </div>
             </div>
         </div>
     </div>
-</div>
-</div>
-@endsection
+
+    <script>
+        const rowsPerPage = 6;
+        let currentPage = 1;
+
+        function searchTable() {
+            const input = document.getElementById("search").value.toLowerCase();
+            const rows = document.querySelectorAll("#stocksTableBody tr");
+            let filteredRows = [];
+
+            rows.forEach((row) => {
+                const name = row.cells[1].innerText.toLowerCase();
+                const quantity = row.cells[2].innerText.toLowerCase();
+
+                if (name.includes(input) || quantity.includes(input)) {
+                    filteredRows.push(row);
+                }
+            });
+            paginate(filteredRows);
+        }
+
+        function paginate(filteredRows) {
+            const paginationDiv = document.getElementById("pagination");
+            paginationDiv.innerHTML = "";
+            const totalPages = Math.ceil(filteredRows.length / rowsPerPage);
+            const start = (currentPage - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            const visibleRows = filteredRows.slice(start, end);
+            document.querySelectorAll("#stocksTableBody tr").forEach(row => {
+                row.style.display = "none";
+            });
+            visibleRows.forEach(row => {
+                row.style.display = "";
+            });
+            for (let i = 1; i <= totalPages; i++) {
+                const button = document.createElement("button");
+                button.innerText = i;
+                button.classList.add("btn", "btn-secondary", "mx-1");
+                button.onclick = function () {
+                    currentPage = i;
+                    paginate(filteredRows);
+                };
+                paginationDiv.appendChild(button);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            paginate(Array.from(document.querySelectorAll("#stocksTableBody tr")));
+        });
+    </script>
+
+    @endsection

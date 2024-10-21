@@ -37,6 +37,7 @@ class StockController extends Controller
     {
         $stock = Stock::findOrFail($id);
         return view('stocks.edit', compact('stock'));
+
     }
 
     public function destroy($id)
@@ -54,6 +55,7 @@ class StockController extends Controller
             'quantity' => 'required|integer|min:1',
             'status' => 'required|in:active,inactive',
         ]);
+
         $stock = Stock::findOrFail($id);
         $stock->update($request->all());
         return redirect()->route('stocks.index')->with('success', 'Stock updated successfully!');
@@ -66,28 +68,28 @@ class StockController extends Controller
         return view('stocks.assign', compact('user', 'stocks'));
     }
     public function storeAssignedStocks(Request $request, $userId)
-{
-    $request->validate([
-        'stocks' => 'required|array',
-        'assigned_quantity' => 'required|integer|min:1',
-        'is_active' => 'required|boolean',
-    ]);
+    {
+        $request->validate([
+            'stocks' => 'required|array',
+            'assigned_quantity' => 'required|integer|min:1',
+            'is_active' => 'required|boolean',
+        ]);
 
-    $user = User::findOrFail($userId);
-    foreach ($request->stocks as $stockId) {
-        $stock = Stock::find($stockId);
-        if ($stock && $stock->quantity >= $request->assigned_quantity) {
-            $user->stocks()->attach($stockId, [
-                'assigned_quantity' => $request->input('assigned_quantity'),
-                'is_active' => $request->input('is_active'), 
-            ]);
-            $stock->decrement('quantity', $request->assigned_quantity);
-        } else {
-            return redirect()->back()->withErrors(['stocks' => "Stock quantity exceeded or stock ID {$stockId} is unavailable."]);
+        $user = User::findOrFail($userId);
+        foreach ($request->stocks as $stockId) {
+            $stock = Stock::find($stockId);
+            if ($stock && $stock->quantity >= $request->assigned_quantity) {
+                $user->stocks()->attach($stockId, [
+                    'assigned_quantity' => $request->input('assigned_quantity'),
+                    'is_active' => $request->input('is_active'),
+                ]);
+                $stock->decrement('quantity', $request->assigned_quantity);
+            } else {
+                return redirect()->back()->withErrors(['stocks' => "Stock quantity exceeded or stock ID {$stockId} is unavailable."]);
+            }
         }
-    } 
-    return redirect()->route('stocks.index')->with('success', 'Stocks assigned successfully.');
-}
+        return redirect()->route('stocks.index')->with('success', 'Stocks assigned successfully.');
+    }
     public function showAssignStocks($userId)
     {
         $user = User::findOrFail($userId);
