@@ -67,3 +67,12 @@
         display: none;
     }
 </style>
+<script>
+
+$(document).ready(function () {
+        $('#stocks').select2({
+            placeholder: "Select stocks",
+            allowClear: true
+        });
+    });
+</script>

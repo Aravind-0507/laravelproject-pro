@@ -2,9 +2,9 @@
 
 @section('content')
 
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<link rel="stylesheet" href="{{asset('css/dropdownstock.css')}}">
+<script src="{{asset('js/dropdownstock.js')}}"></script>
+<script src="{{asset('js/dropdownstock1.js')}}"></script>
 
 <div class="container">
     <h1>Assign Stocks </h1>
@@ -34,8 +34,6 @@
                 @endforeach
             </select>
         </div>
-
-
 </div>
 
 <div id="selected-stocks" class="mt-3">

@@ -151,10 +151,6 @@
 
 <h1>Stocks</h1>
 
-<div class="text-center">
-    <a href="{{ route('stocks.create') }}" class="btn btn-success">Add Stock</a>
-</div>
-
 @if(session('success'))
     <div class="alert alert-success">{{ session('success') }}</div>
 @endif
@@ -164,13 +160,12 @@
     <div class="col-12 d-flex justify-content-between mb-3">
         <input type="text" id="search" placeholder="Search stocks..." oninput="searchTable()" class="form-control"
             style="width: 400px;">
-        <div>
-            @foreach ($users as $user)
-                <a href="{{ route('stocks.assign', ['user' => $user->id]) }}" class="btn btn-primary mx-1">Assign Stocks</a>
-            @endforeach
+        <div class="text-center">
+            <a href="{{ route('stocks.create') }}" class="btn btn-success">Add Stock</a>
         </div>
     </div>
 </div>
+
 <div class="row mt-3">
     <div class="col-12">
         <div class="card">
@@ -191,12 +186,20 @@
                             <tr>
                                 <td>{{ $stock->id }}</td>
                                 <td>{{ $stock->name }}</td>
-                                <td>{{ $stock->quantity }}</td>
+                                <td>
+                                    @if($stock->quantity == 0)
+                                        <span class="text-danger">Out of Stock</span>
+                                    @else
+                                        {{ $stock->quantity }}
+                                    @endif
+                                </td>
+
                                 <td>
                                     <span class="btn {{ $stock->status == 'active' ? 'btn-success' : 'btn-danger' }}">
                                         {{ $stock->status == 'active' ? 'Active' : 'Inactive' }}
                                     </span>
                                 </td>
+
                                 <td>
                                     <a href="{{ route('stocks.edit', $stock->id) }}"
                                         class="btn btn-primary btn-sm mx-2">Edit</a>
@@ -212,61 +215,62 @@
                         @endforeach
                     </tbody>
                 </table>
+
                 <div class="d-flex justify-content-end align-items-center mt-3">
                     <div id="pagination" class="pagination"></div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        const rowsPerPage = 6;
-        let currentPage = 1;
+<script>
+    const rowsPerPage = 6;
+    let currentPage = 1;
 
-        function searchTable() {
-            const input = document.getElementById("search").value.toLowerCase();
-            const rows = document.querySelectorAll("#stocksTableBody tr");
-            let filteredRows = [];
+    function searchTable() {
+        const input = document.getElementById("search").value.toLowerCase();
+        const rows = document.querySelectorAll("#stocksTableBody tr");
+        let filteredRows = [];
 
-            rows.forEach((row) => {
-                const name = row.cells[1].innerText.toLowerCase();
-                const quantity = row.cells[2].innerText.toLowerCase();
+        rows.forEach((row) => {
+            const name = row.cells[1].innerText.toLowerCase();
+            const quantity = row.cells[2].innerText.toLowerCase();
 
-                if (name.includes(input) || quantity.includes(input)) {
-                    filteredRows.push(row);
-                }
-            });
-            paginate(filteredRows);
-        }
-
-        function paginate(filteredRows) {
-            const paginationDiv = document.getElementById("pagination");
-            paginationDiv.innerHTML = "";
-            const totalPages = Math.ceil(filteredRows.length / rowsPerPage);
-            const start = (currentPage - 1) * rowsPerPage;
-            const end = start + rowsPerPage;
-            const visibleRows = filteredRows.slice(start, end);
-            document.querySelectorAll("#stocksTableBody tr").forEach(row => {
-                row.style.display = "none";
-            });
-            visibleRows.forEach(row => {
-                row.style.display = "";
-            });
-            for (let i = 1; i <= totalPages; i++) {
-                const button = document.createElement("button");
-                button.innerText = i;
-                button.classList.add("btn", "btn-secondary", "mx-1");
-                button.onclick = function () {
-                    currentPage = i;
-                    paginate(filteredRows);
-                };
-                paginationDiv.appendChild(button);
+            if (name.includes(input) || quantity.includes(input)) {
+                filteredRows.push(row);
             }
-        }
-
-        document.addEventListener("DOMContentLoaded", () => {
-            paginate(Array.from(document.querySelectorAll("#stocksTableBody tr")));
         });
-    </script>
+        paginate(filteredRows);
+    }
 
-    @endsection
+    function paginate(filteredRows) {
+        const paginationDiv = document.getElementById("pagination");
+        paginationDiv.innerHTML = "";
+        const totalPages = Math.ceil(filteredRows.length / rowsPerPage);
+        const start = (currentPage - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+        const visibleRows = filteredRows.slice(start, end);
+        document.querySelectorAll("#stocksTableBody tr").forEach(row => {
+            row.style.display = "none";
+        });
+        visibleRows.forEach(row => {
+            row.style.display = "";
+        });
+        for (let i = 1; i <= totalPages; i++) {
+            const button = document.createElement("button");
+            button.innerText = i;
+            button.classList.add("btn", "btn-secondary", "mx-1");
+            button.onclick = function () {
+                currentPage = i;
+                paginate(filteredRows);
+            };
+            paginationDiv.appendChild(button);
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        paginate(Array.from(document.querySelectorAll("#stocksTableBody tr")));
+    });
+</script>
+@endsection

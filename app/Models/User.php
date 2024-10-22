@@ -16,7 +16,7 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $fillable = ['name', 'email', 'password','joining_date','phone','role','is_active','password_reset_sent_at'];
+    protected $fillable = ['name', 'email', 'password', 'joining_date', 'phone', 'role', 'is_active', 'password_reset_sent_at'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -43,10 +43,9 @@ class User extends Authenticatable
     protected $casts = [
         'expires_at' => 'datetime',
     ];
-    
-public function stocks()
-{
-    return $this->belongsToMany(Stock::class)->withPivot('assigned_quantity');
-}
 
+    public function stocks()
+    {
+        return $this->belongsToMany(Stock::class)->withPivot('assigned_quantity');
+    }
 }

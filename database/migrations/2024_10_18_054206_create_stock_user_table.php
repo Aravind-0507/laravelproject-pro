@@ -16,14 +16,10 @@ return new class extends Migration
             $table->foreignId('stock_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->integer('assigned_quantity');
-            $table->boolean('is_active')->default(true); // Add the is_active column
+            $table->boolean('is_active')->default(true); 
             $table->timestamps();
         });
     }
-
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('stock_user');

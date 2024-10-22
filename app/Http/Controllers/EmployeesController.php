@@ -7,6 +7,8 @@ use App\Models\Employee;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
+use App\Models\Stock;
+use Illuminate\Support\Facades\Log;
 
 class EmployeesController extends Controller
 {
@@ -20,74 +22,96 @@ class EmployeesController extends Controller
 
     public function create()
     {
-        return view('employees.create');
+        $stocks = Stock::where('quantity', '<=', 50)->get();
+        return view('employees.create', compact('stocks'));
+
     }
 
     public function store(Request $request)
     {
-
         $request->validate([
-            'name' => 'required|unique:employees,name',
-            'email' => 'required|unique:employees,email|email',
-            'joining_date' => 'required|date|before:' . Carbon::now()->subYears(18)->toDateString(),
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:employees',
             'phone' => 'required|numeric',
-            'password' => 'required|string|min:8',
-        ], [
-            'joining_date.before' => 'You must be at least 18 years old.',
+            'joining_date' => 'required|date',
+            'password' => 'required|numeric|min:8',
+            'is_active' => 'nullable|boolean',
+            'assigned_quantities' => 'required|array',
+            'assigned_quantities.*' => 'required|numeric',
         ]);
-
 
         $employee = Employee::create([
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
             'joining_date' => $request->joining_date,
-            'is_active' => $request->is_active ? true : false,
+            'is_active' => $request->is_active == '1' ? 1 : 0,
             'password' => Hash::make($request->password),
         ]);
 
 
+        foreach ($request->stocks as $index => $stockId) {
+            if (Stock::find($stockId)) {
+                $employee->stocks()->attach($stockId, ['assigned_quantity' => $request->assigned_quantities[$index]]);
+            } else {
+                Log::error("Stock ID {$stockId} does not exist.");
+            }
+        }
         SendUserWelcomeEmail::dispatch($employee);
 
+        return redirect()->route('employees.index')->with('success', 'Employee created successfully!');
+    }
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:employees,email,' . $id,
+            'phone' => 'required|numeric',
+            'joining_date' => 'required|date',
+            'is_active' => 'nullable|boolean',
+            'assigned_quantities' => 'required|array',
+            'assigned_quantities.*' => 'required|numeric|min:0',
+        ]);
 
-        return redirect()->route('employees.index')->with('success', 'Employee created and welcome email sent.');
+        $employee = Employee::findOrFail($id);
+        $employee->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'joining_date' => $request->joining_date,
+            'is_active' => $request->is_active == '1' ? 1 : 0,
+        ]);
+        foreach ($request->assigned_quantities as $stockId => $quantity) {
+            $employee->stocks()->updateExistingPivot($stockId, ['assigned_quantity' => $quantity]);
+        }
+
+        return redirect()->route('employees.index')->with('success', 'User  Details updated successfully!');
     }
 
     public function show($id)
     {
-
-        $employee = Employee::findOrFail($id);
-
+        $employee = Employee::with('stocks')->findOrFail($id);
         return view('employees.show', compact('employee'));
     }
 
-    public function edit(Employee $employee)
+    public function edit($id)
     {
-        return view('employees.edit', compact('employee'));
-    }
+        // Retrieve the employee along with their stocks
+        $employee = Employee::with('stocks')->findOrFail($id);
 
-    public function update(Request $request, Employee $employee)
-    {
-        $request->validate([
-            'name' => 'required|unique:employees,name,' . $employee->id,
-            'email' => 'required|email|unique:employees,email,' . $employee->id,
-            'phone' => 'required|numeric|digits:10|unique:employees,phone,' . $employee->id,
-            'joining_date' => 'required|date|before:' . Carbon::now()->subYears(18)->toDateString(),
-            'is_active' => 'nullable|boolean',
-            'password' => 'nullable|string|min:8',
-        ]);
+        // Retrieve all stocks
+        $stocks = Stock::all();
 
-        $data = $request->all();
+        // Get assigned quantities from the pivot table
+        $assignedQuantities = $employee->stocks->pluck('pivot.assigned_quantity', 'id')->toArray();
 
-        if (isset($data['password'])) {
-            $data['password'] = Hash::make($data['password']);
-        } else {
-            unset($data['password']); 
-        }
+        // Filter stocks to only include those with assigned quantities greater than 0
+        $filteredStocks = $stocks->filter(function ($stock) use ($assignedQuantities) {
+            return isset($assignedQuantities[$stock->id]) && $assignedQuantities[$stock->id] > 0;
+        });
 
-        $employee->update($data);
-
-        return redirect()->route('employees.edit', $employee->id)->with('success', 'User details updated successfully!');
+        // Return the view with required data
+        return view('employees.edit', compact('employee', 'filteredStocks', 'assignedQuantities', 'stocks'));
     }
 
     public function destroy(Employee $employee)

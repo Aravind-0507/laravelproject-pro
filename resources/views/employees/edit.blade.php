@@ -1,76 +1,73 @@
 @extends('layouts.app')
-@section('content')
 
-@if(session()->has('success'))
-    <div class="alert alert-success">
-        {{session()->get('success')}}
-    </div>
-@endif
+@section('content')
 <div class="card">
     <div class="card-body">
-        <p style="font-size:20px; font-weight:bold;">Update User</p>
-        <form action="{{route('employees.update', $employee->id)}}" class="was-validated" method="POST"
-            onsubmit="return confirm('Are you sure you want to Update this User?');">
-            @method('PUT')
+        <p style="font-size:20px; font-weight:bold;">Edit Employee</p>
+        <form action="{{ route('employees.update', $employee->id) }}" method="POST" class="was-validated">
             @csrf
-            <div class="form-group has-validation">
+            @method('PUT')
+
+            <div class="form-group">
                 <label for="name">Name</label>
-                <input type="text" name="name" id="name"
-                    class="form-control {{$errors->has('name') ? 'is-invalid' : ''}}" value="{{$employee->name}}"
-                    required>
-                @if($errors->has('name'))
-                    <span class="invalid-feedback">
-                        <strong>{{$errors->first('name')}}</strong>
-                    </span>
-                @endif
+                <input type="text" name="name" class="form-control" value="{{ old('name', $employee->name) }}" required>
             </div>
-            <div class="form-group has-validation">
+
+            <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" name="email" id="email"
-                    class="form-control {{$errors->has('email') ? 'is-invalid' : ''}}" value="{{$employee->email}}"
+                <input type="email" name="email" class="form-control" value="{{ old('email', $employee->email) }}"
                     required>
-                @if($errors->has('name'))
-                    <span class="invalid-feedback">
-                        <strong>{{$errors->first('email')}}</strong>
-                    </span>
-                @endif
             </div>
-            <div class="form-group has-validation">
-                <label for="email">Phone</label>
-                <input type="number" name="phone" id="phone"
-                    class="form-control {{$errors->has('phone') ? 'is-invalid' : ''}}" value="{{$employee->phone}}"
+
+            <div class="form-group">
+                <label for="phone">Phone</label>
+                <input type="number" name="phone" class="form-control" value="{{ old('phone', $employee->phone) }}"
                     required>
-                @if($errors->has('name'))
-                    <span class="invalid-feedback">
-                        <strong>{{$errors->first('phone')}}</strong>
-                    </span>
-                @endif
             </div>
-            <div class="form-group has-validation">
-                <label for="joining_date">Joining date</label>
-                <input type="date" name="joining_date" id="joining_date"
-                    class="form-control {{$errors->has('joining_date') ? 'is-invalid' : ''}}"
-                    value="{{$employee->joining_date}}" required>
-                @if($errors->has('name'))
-                    <span class="invalid-feedback">
-                        <strong>{{$errors->first('joining_date')}}</strong>
-                    </span>
-                @endif
+
+            <div class="form-group">
+                <label for="joining_date">Date of Birth</label>
+                <input type="date" name="joining_date" class="form-control"
+                    value="{{ old('joining_date', $employee->joining_date) }}" required>
             </div>
-            <div class="form-group has-validation">
-                <label for="is_active">Active</label><br>
-                <input type="checkbox" name="is_active" id="is_active"
-                    class="{{$errors->has('is_active') ? 'is-invalid' : ''}}" value="1" {{$employee->is_active == '1' ? 'checked' : ''}} required>
-                @if($errors->has('name'))
-                    <span class="invalid-feedback">
-                        <strong>{{$errors->first('is_active')}}</strong>
-                    </span>
-                @endif
+
+            <div class="form-group">
+                <label for="stocks">Select Stocks:</label>
+                <select name="stocks[]" id="stocks" multiple class="form-control" required>
+                    @foreach($stocks as $stock)
+                        <option value="{{ $stock->id }}" {{ in_array($stock->id, $employee->stocks->pluck('id')->toArray()) ? 'selected' : '' }}>
+                            {{ $stock->name }} (Available: {{ $stock->quantity }})
+                        </option>
+                    @endforeach
+                </select>
             </div>
-            <button type="submit" class="btn btn-primary">Update User</button>
-            <a href="{{route('employees.index')}}" class="btn btn-warning ">Back to User list</a>
+
+            <h3>Assign Quantities</h3>
+            @foreach($filteredStocks as $stock)
+                <div class="form-group">
+                    <label for="assigned_quantities[{{ $stock->id }}]">{{ $stock->name }}</label>
+                    <input type="number" name="assigned_quantities[{{ $stock->id }}]"
+                        id="assigned_quantities[{{ $stock->id }}]" class="form-control"
+                        value="{{ old('assigned_quantities.' . $stock->id, $assignedQuantities[$stock->id] ?? 0) }}"
+                        required min="0">
+                    @error('assigned_quantities.' . $stock->id)
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+            @endforeach
+
+            <div class="form-group">
+                <label for="is_active">Is Active:</label>
+                <select name="is_active" class="form-control" required>
+                    <option value="1" {{ $employee->is_active ? 'selected' : '' }}>Yes</option>
+                    <option value="0" {{ !$employee->is_active ? 'selected' : '' }}>No</option>
+                </select>
+            </div>
+
+            <br>
+            <button type="submit" class="btn btn-primary">Update Employee</button>
+            <a href="{{ route('employees.index') }}" class="btn btn-success">Back</a>
         </form>
     </div>
-</div>
 </div>
 @endsection
