@@ -96,21 +96,12 @@ class EmployeesController extends Controller
 
     public function edit($id)
     {
-        // Retrieve the employee along with their stocks
         $employee = Employee::with('stocks')->findOrFail($id);
-
-        // Retrieve all stocks
         $stocks = Stock::all();
-
-        // Get assigned quantities from the pivot table
         $assignedQuantities = $employee->stocks->pluck('pivot.assigned_quantity', 'id')->toArray();
-
-        // Filter stocks to only include those with assigned quantities greater than 0
         $filteredStocks = $stocks->filter(function ($stock) use ($assignedQuantities) {
             return isset($assignedQuantities[$stock->id]) && $assignedQuantities[$stock->id] > 0;
         });
-
-        // Return the view with required data
         return view('employees.edit', compact('employee', 'filteredStocks', 'assignedQuantities', 'stocks'));
     }
 
