@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\WelcomeController;
-use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\EmployeesController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\PasswordController;
@@ -21,13 +21,13 @@ Route::post('login', [LoginController::class, 'login']);
 
 Route::get('Welcome', [WelcomeController::class, 'index'])->name('Welcome');
 
-Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
-Route::get('/employees/create', [EmployeeController::class, 'create'])->name('employees.create');
-Route::post('/employees/store', [EmployeeController::class, 'store'])->name('employees.store');
-Route::get('/employees/{id}', [EmployeeController::class, 'show'])->name('employees.show');
-Route::get('/employees/{employee}/edit', [EmployeeController::class, 'edit'])->name('employees.edit');
-Route::put('/employees/{employee}', [EmployeeController::class, 'update'])->name('employees.update');
-Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
+Route::get('/employees', [EmployeesController::class, 'index'])->name('employees.index');
+Route::get('/employees/create', [EmployeesController::class, 'create'])->name('employees.create');
+Route::post('/employees/store', [EmployeesController::class, 'store'])->name('employees.store');
+Route::get('/employees/{id}', [EmployeesController::class, 'show'])->name('employees.show');
+Route::get('/employees/{employee}/edit', [EmployeesController::class, 'edit'])->name('employees.edit');
+Route::put('/employees/{employee}', [EmployeesController::class, 'update'])->name('employees.update');
+Route::delete('/employees/{employee}', [EmployeesController::class, 'destroy'])->name('employees.destroy');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -46,7 +46,7 @@ Route::post('password/reset', [PasswordController::class, 'reset'])->name('passw
 Route::post('', [WelcomeController::class, 'logout'])->name('logout');
 
 Route::get('password/expired', function () {
-    return view('auth.passwords.expired'); 
+    return view('auth.passwords.expired');
 })->name('password.expired');
 
 
@@ -66,7 +66,7 @@ Route::get('users/{user}/assign-stocks', [StockController::class, 'assignStocks'
 Route::post('users/{user}/assign-stocks', [StockController::class, 'storeAssignedStocks'])
     ->name('stocks.storeAssignedStocks');
 
-    Route::get('stocks/assign/{user}', [StockController::class, 'showAssignStocks'])->name('stocks.assign');
-    
-    Route::get('/users/{user}/assign-stocks', [StockController::class, 'assignStocksToUser'])
+Route::get('stocks/assign/{user}', [StockController::class, 'showAssignStocks'])->name('stocks.assign');
+
+Route::get('/users/{user}/assign-stocks', [StockController::class, 'assignStocksToUser'])
     ->name('stocks.assign');

@@ -44,7 +44,6 @@ class User extends Authenticatable
         'expires_at' => 'datetime',
     ];
     
-   // In User.php
 public function stocks()
 {
     return $this->belongsToMany(Stock::class)->withPivot('assigned_quantity');

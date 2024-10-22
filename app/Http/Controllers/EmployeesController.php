@@ -8,12 +8,13 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
 
-class EmployeeController extends Controller
+class EmployeesController extends Controller
 {
     public function index()
     {
 
         $employees = Employee::all();
+
         return view('employees.index', compact('employees'));
     }
 
@@ -81,7 +82,7 @@ class EmployeeController extends Controller
         if (isset($data['password'])) {
             $data['password'] = Hash::make($data['password']);
         } else {
-            unset($data['password']);
+            unset($data['password']); 
         }
 
         $employee->update($data);

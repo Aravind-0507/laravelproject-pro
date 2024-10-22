@@ -15,6 +15,15 @@
         </div>
     @endif
 
+    @if($outOfStockStocks->isNotEmpty())
+        <div class="alert alert-danger">
+            <strong>Out of Stock:</strong>
+            @foreach($outOfStockStocks as $stock)
+                <p>{{ $stock->name }} (Quantity: {{ $stock->quantity }})</p>
+            @endforeach
+        </div>
+    @endif
+
     <form action="{{ route('stocks.storeAssignedStocks', $user->id) }}" method="POST">
         @csrf
         <div class="form-group">
