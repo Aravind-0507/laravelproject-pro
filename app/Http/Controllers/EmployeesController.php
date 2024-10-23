@@ -19,7 +19,6 @@ class EmployeesController extends Controller
 
         return view('employees.index', compact('employees'));
     }
-
     public function create()
     {
         $stocks = Stock::where('quantity', '<=', 50)->get();
@@ -46,6 +45,7 @@ class EmployeesController extends Controller
         'password' => Hash::make($request->password),
         'is_active' => $request->is_active,
     ]);
+    
     foreach ($request->stocks as $index => $stockId) {
         $assignedQuantity = $request->assigned_quantities[$index];
         $stock = Stock::find($stockId);
@@ -58,10 +58,11 @@ class EmployeesController extends Controller
             ])->withInput();
         }
     }
+
     SendUserWelcomeEmail::dispatch($employee);
+
     return redirect()->route('employees.index')->with('success', 'User created successfully.');
 }
-
     public function update(Request $request, $id)
     {
         $data = $request->validate([
@@ -89,7 +90,7 @@ class EmployeesController extends Controller
             $assignedQuantity = $data['assigned_quantities'][$key];
             $newQuantity = $stock->quantity - $assignedQuantity;
             if ($newQuantity < 0) {
-                return redirect()->back()->withErrors(['error' => 'Not enough stock available for ' . $stock->name]);
+            return redirect()->back()->withErrors(['error' => 'Not enough stock available for ' . $stock->name]);
             }
             $stock->quantity = $newQuantity;
             $stock->save();
@@ -109,7 +110,7 @@ class EmployeesController extends Controller
         $stocks = Stock::all();
         $assignedQuantities = $employee->stocks->pluck('pivot.assigned_quantity', 'id')->toArray();
         $filteredStocks = $stocks->filter(function ($stock) use ($assignedQuantities) {
-            return isset($assignedQuantities[$stock->id]) && $assignedQuantities[$stock->id] > 0;
+        return isset($assignedQuantities[$stock->id]) && $assignedQuantities[$stock->id] > 0;
         });
         return view('employees.edit', compact('employee', 'filteredStocks', 'assignedQuantities', 'stocks'));
     }

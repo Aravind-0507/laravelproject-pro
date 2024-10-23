@@ -15,7 +15,7 @@ class UsersExport implements FromCollection, WithHeadings
      */
     public function collection()
     {
-        return Employee::all(['id', 'name', 'email', 'joining_date', 'is_active', 'phone']); // Adjust fields as necessary
+        return Employee::all(['id', 'name', 'email', 'joining_date', 'is_active', 'phone']); 
     }
 
     /**

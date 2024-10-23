@@ -58,7 +58,7 @@
                             </tr>
                         </thead>
                         <tbody id="employeeTableBody">
-                        @foreach($employees as $key => $employee)
+                            @foreach($employees as $key => $employee)
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $employee->name }}</td>
@@ -152,12 +152,10 @@
     document.addEventListener("DOMContentLoaded", () => {
         searchTable();
     });
-
     document.querySelector('.profile-dropdown').addEventListener('click', function () {
         const dropdownMenu = this.querySelector('.dropdown-menu');
         dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
     });
-
     window.addEventListener('click', function (event) {
         const dropdownMenu = document.querySelector('.dropdown-menu');
         if (!event.target.matches('.profile-dropdown') && dropdownMenu.style.display === 'block') {
