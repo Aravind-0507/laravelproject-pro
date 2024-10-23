@@ -26,8 +26,7 @@ class EmployeesController extends Controller
         return view('employees.create', compact('stocks'));
 
     }
-
-   public function store(Request $request)
+    public function store(Request $request)
 {
     $request->validate([
         'name' => 'required|string|max:255',
@@ -104,7 +103,6 @@ class EmployeesController extends Controller
         $employee = Employee::with('stocks')->findOrFail($id);
         return view('employees.show', compact('employee'));
     }
-
     public function edit($id)
     {
         $employee = Employee::with('stocks')->findOrFail($id);
@@ -121,7 +119,6 @@ class EmployeesController extends Controller
         $employee->delete();
         return redirect()->route('employees.index')->with('success', 'User deleted successfully.');
     }
-
     public function getData()
     {
         $employees = Employee::all();

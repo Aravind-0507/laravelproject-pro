@@ -58,7 +58,7 @@
                             </tr>
                         </thead>
                         <tbody id="employeeTableBody">
-                            @foreach($employees as $key => $employee)
+                        @foreach($employees as $key => $employee)
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $employee->name }}</td>
@@ -165,6 +165,7 @@
         }
     });
 </script>
+
 <style>
     .sidenav {
         height: 100%;

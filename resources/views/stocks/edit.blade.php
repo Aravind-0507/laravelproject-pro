@@ -80,10 +80,10 @@
             <ul>
                 @foreach($errors->all() as $error)
                     <li>{{ $error }}</li>
-                @endforeach 
+                @endforeach
             </ul>
-        </div> 
-     @endif 
+        </div>
+    @endif
     <form action="{{ route('stocks.update', $stock->id) }}" method="POST">
         @csrf
         @method('PUT')
@@ -99,10 +99,12 @@
         <div class="mb-3">
             <label for="status" class="form-label">Status</label>
             <select name="status" class="form-control" required>
-                <option value="active" {{ $stock->is_active ? 'selected' : '' }}>Active</option>
-                <option value="inactive" {{ !$stock->is_active ? 'selected' : '' }}>Inactive</option>
+                <option value="" disabled {{ is_null($stock->is_active) ? 'selected' : '' }}>Select Status</option>
+                <option value="active" {{ $stock->is_active === 'active' ? 'selected' : '' }}>Active</option>
+                <option value="inactive" {{ $stock->is_active === 'inactive' ? 'selected' : '' }}>Inactive</option>
             </select>
         </div>
+
         <button type="submit" class="btn btn-primary">Update Stock</button>
     </form>
 </div>

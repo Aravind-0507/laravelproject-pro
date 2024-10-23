@@ -24,5 +24,4 @@ class Stock extends Model
     {
         return $this->belongsToMany(Stock::class)->withPivot('assigned_quantity');
     }
-
 }
