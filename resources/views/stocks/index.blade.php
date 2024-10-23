@@ -148,18 +148,28 @@
         }
     }
 </style>
-
 <h1>Stocks</h1>
 
 @if(session('success'))
     <div class="alert alert-success">{{ session('success') }}</div>
 @endif
-<br>
+
+@php
+    $hasZeroQuantity = $stocks->filter(function($stock) {
+        return $stock->quantity == 0;
+    })->isNotEmpty();
+@endphp
+
+@if($hasZeroQuantity)
+    <div class="alert alert-danger" style="background-color: #f8d7da; color: #721c24;">
+        <strong>Error:</strong> Some stocks have a quantity of 0. Please update the quantities.
+    </div>
+@endif
+
 
 <div class="row">
     <div class="col-12 d-flex justify-content-between mb-3">
-        <input type="text" id="search" placeholder="Search stocks..." oninput="searchTable()" class="form-control"
-            style="width: 400px;">
+        <input type="text" id="search" placeholder="Search stocks..." oninput="searchTable()" class="form-control" style="width: 400px;">
         <div class="text-center">
             <a href="{{ route('stocks.create') }}" class="btn btn-success">Add Stock</a>
         </div>
@@ -201,11 +211,8 @@
                                 </td>
 
                                 <td>
-                                    <a href="{{ route('stocks.edit', $stock->id) }}"
-                                        class="btn btn-primary btn-sm mx-2">Edit</a>
-                                    <form action="{{ route('stocks.destroy', $stock->id) }}" method="POST"
-                                        style="display: inline;"
-                                        onsubmit="return confirm('Are you sure you want to delete this stock?');">
+                                    <a href="{{ route('stocks.edit', $stock->id) }}" class="btn btn-primary btn-sm mx-2">Edit</a>
+                                    <form action="{{ route('stocks.destroy', $stock->id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this stock?');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm">Delete</button>
@@ -223,6 +230,7 @@
         </div>
     </div>
 </div>
+
 
 <script>
     const rowsPerPage = 6;

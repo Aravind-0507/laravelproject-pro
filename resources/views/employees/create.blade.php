@@ -64,7 +64,9 @@
                 <label for="stocks">Select Stocks:</label>
                 <select name="stocks[]" id="stocks" multiple class="form-control" required>
                     @foreach($stocks as $stock)
-                        <option value="{{ $stock->id }}">{{ $stock->name }} (Available: {{ $stock->quantity }})</option>
+                        <option value="{{ $stock->id }}">
+                            {{ $stock->name }} (Available: {{ $stock->quantity }})
+                        </option>
                     @endforeach
                 </select>
                 @if($errors->has('stocks'))
@@ -132,7 +134,7 @@
 <script>
     document.getElementById('add-quantity').addEventListener('click', function () {
         const container = document.getElementById('assigned-quantities-container');
-        const index = container.querySelectorAll('input[type="number"]').length; // Count current inputs
+        const index = container.querySelectorAll('input[type="number"]').length;
         const input = document.createElement('input');
         input.type = 'number';
         input.name = `assigned_quantities[${index}]`;

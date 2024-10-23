@@ -80,10 +80,10 @@
             <ul>
                 @foreach($errors->all() as $error)
                     <li>{{ $error }}</li>
-                @endforeach
+                @endforeach 
             </ul>
-        </div>
-    @endif
+        </div> 
+     @endif 
     <form action="{{ route('stocks.update', $stock->id) }}" method="POST">
         @csrf
         @method('PUT')

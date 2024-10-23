@@ -27,67 +27,78 @@ class EmployeesController extends Controller
 
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:employees',
-            'phone' => 'required|numeric',
-            'joining_date' => 'required|date',
-            'password' => 'required|numeric|min:8',
-            'is_active' => 'nullable|boolean',
-            'assigned_quantities' => 'required|array',
-            'assigned_quantities.*' => 'required|numeric',
-        ]);
-
-        $employee = Employee::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'joining_date' => $request->joining_date,
-            'is_active' => $request->is_active == '1' ? 1 : 0,
-            'password' => Hash::make($request->password),
-        ]);
-
-
-        foreach ($request->stocks as $index => $stockId) {
-            if (Stock::find($stockId)) {
-                $employee->stocks()->attach($stockId, ['assigned_quantity' => $request->assigned_quantities[$index]]);
-            } else {
-                Log::error("Stock ID {$stockId} does not exist.");
-            }
+   public function store(Request $request)
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:employees',
+        'phone' => 'required|numeric',
+        'joining_date' => 'required|date',
+        'stocks' => 'required|array',
+        'assigned_quantities' => 'required|array',
+        'password' => 'required|string|min:8',
+        'is_active' => 'required|boolean',
+    ]);
+    $employee = Employee::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'phone' => $request->phone,
+        'joining_date' => $request->joining_date,
+        'password' => Hash::make($request->password),
+        'is_active' => $request->is_active,
+    ]);
+    foreach ($request->stocks as $index => $stockId) {
+        $assignedQuantity = $request->assigned_quantities[$index];
+        $stock = Stock::find($stockId);
+        if ($stock && $stock->quantity >= $assignedQuantity) {
+            $employee->stocks()->attach($stockId, ['assigned_quantity' => $assignedQuantity]);
+            $stock->decrement('quantity', $assignedQuantity);
+        } else {
+            return redirect()->back()->withErrors([
+                'stocks' => 'Insufficient stock for ' . $stock->name
+            ])->withInput();
         }
-        SendUserWelcomeEmail::dispatch($employee);
-
-        return redirect()->route('employees.index')->with('success', 'Employee created successfully!');
     }
+    SendUserWelcomeEmail::dispatch($employee);
+    return redirect()->route('employees.index')->with('success', 'User created successfully.');
+}
+
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $data = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:employees,email,' . $id,
             'phone' => 'required|numeric',
             'joining_date' => 'required|date',
             'is_active' => 'nullable|boolean',
+            'stocks' => 'required|array',
+            'stocks.*' => 'exists:stocks,id',
             'assigned_quantities' => 'required|array',
             'assigned_quantities.*' => 'required|numeric|min:0',
         ]);
-
         $employee = Employee::findOrFail($id);
         $employee->update([
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
             'joining_date' => $request->joining_date,
-            'is_active' => $request->is_active == '1' ? 1 : 0,
+            'is_active' => $request->is_active ?? 0,
         ]);
-        foreach ($request->assigned_quantities as $stockId => $quantity) {
-            $employee->stocks()->updateExistingPivot($stockId, ['assigned_quantity' => $quantity]);
+        $syncData = [];
+        foreach ($data['stocks'] as $key => $stockId) {
+            $stock = Stock::findOrFail($stockId);
+            $assignedQuantity = $data['assigned_quantities'][$key];
+            $newQuantity = $stock->quantity - $assignedQuantity;
+            if ($newQuantity < 0) {
+                return redirect()->back()->withErrors(['error' => 'Not enough stock available for ' . $stock->name]);
+            }
+            $stock->quantity = $newQuantity;
+            $stock->save();
+            $syncData[$stockId] = ['assigned_quantity' => $assignedQuantity];
         }
-
-        return redirect()->route('employees.index')->with('success', 'User  Details updated successfully!');
+        $employee->stocks()->sync($syncData);
+        return redirect()->route('employees.index')->with('success', 'Employee and stock details updated successfully!');
     }
-
     public function show($id)
     {
         $employee = Employee::with('stocks')->findOrFail($id);

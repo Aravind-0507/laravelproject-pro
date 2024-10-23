@@ -165,7 +165,6 @@
         }
     });
 </script>
-
 <style>
     .sidenav {
         height: 100%;
