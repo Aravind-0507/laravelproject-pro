@@ -6,7 +6,7 @@
     <title>Document</title>
 </head>
 <body>
-<h1>Welcome, {{ $employee->name }}!</h1>
+<h1>Welcome, {{ $user->name }}!</h1>
 <p>We're excited to have you with us. Your account has been created successfully!</p>
 </body>
 </html>

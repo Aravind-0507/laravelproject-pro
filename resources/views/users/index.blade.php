@@ -3,8 +3,8 @@
 @section('content')
 
 <div class="sidenav">
-    <a href="{{ route('employees.index') }}">Users List</a><br>
-    <a href="{{route('stocks.index')}}">Stock</a>
+    <a href="{{ route('users.index') }}">Users List</a><br>
+    <a href="{{ route('stocks.index') }}">Stock</a>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <header>
@@ -43,9 +43,8 @@
             <div class="card">
                 <div class="card-body">
                     <strong>Users List</strong>
-                    <a href="{{ route('employees.create') }}" class="btn btn-primary btn-xs float-end py-0">Create
-                        User</a>
-                    <table class="table table-responsive table-bordered table-striped" id="employeeTable"
+                    <a href="{{ route('users.create') }}" class="btn btn-primary btn-xs float-end py-0">Create User</a>
+                    <table class="table table-responsive table-bordered table-striped" id="userTable"
                         style="margin-top:10px;">
                         <thead>
                             <tr>
@@ -57,35 +56,33 @@
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody id="employeeTableBody">
-                            @foreach($employees as $key => $employee)
+                        <tbody id="userTableBody">
+                            @foreach($users as $key => $user)
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
-                                    <td>{{ $employee->name }}</td>
-                                    <td>{{ $employee->email }}</td>
-                                    <td>{{ $employee->joining_date }}</td>
+                                    <td>{{ $user->name }}</td>
+                                    <td>{{ $user->email }}</td>
+                                    <td>{{ $user->joining_date }}</td>
                                     <td>
                                         <span
-                                            class="btn {{ $employee->is_active == 1 ? 'btn-success' : 'btn-danger' }} btn-xs py-0">
-                                            {{ $employee->is_active == 1 ? 'Active' : 'Inactive' }}
+                                            class="btn {{ $user->is_active == 1 ? 'btn-success' : 'btn-danger' }} btn-xs py-0">
+                                            {{ $user->is_active == 1 ? 'Active' : 'Inactive' }}
                                         </span>
                                     </td>
 
-
                                     <td>
                                         <div class="d-inline">
-                                            <a href="{{ route('employees.show', $employee->id) }}"
+                                            <a href="{{ route('users.show', $user->id) }}"
                                                 class="btn btn-primary btn-sm mx-2">Show</a>
-                                            <a href="{{ route('employees.edit', $employee->id) }}"
+                                            <a href="{{ route('users.edit', $user->id) }}"
                                                 class="btn btn-warning btn-sm mx-2">Edit</a>
-                                            <form action="{{ route('employees.destroy', $employee->id) }}" method="POST"
+                                            <form action="{{ route('users.destroy', $user->id) }}" method="POST"
                                                 onsubmit="return confirm('Are you sure you want to delete this User?');"
                                                 style="display: inline;">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger btn-sm mx-1">Delete</button>
                                             </form>
-
                                         </div>
                                     </td>
                                 </tr>
@@ -107,7 +104,7 @@
 
     function searchTable() {
         const input = document.getElementById("search").value.toLowerCase();
-        const rows = document.querySelectorAll("#employeeTableBody tr");
+        const rows = document.querySelectorAll("#userTableBody tr");
         let filteredRows = [];
 
         rows.forEach((row) => {
@@ -132,7 +129,7 @@
         const start = (currentPage - 1) * rowsPerPage;
         const end = start + rowsPerPage;
         const visibleRows = filteredRows.slice(start, end);
-        document.querySelectorAll("#employeeTableBody tr").forEach(row => {
+        document.querySelectorAll("#userTableBody tr").forEach(row => {
             row.style.display = "none";
         });
         visibleRows.forEach(row => {

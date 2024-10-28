@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,9 +11,9 @@
             margin: 0;
             display: flex;
             flex-direction: column;
-            min-height: 100vh; 
-            background-color: #f0f2f5; 
-            overflow: hidden; 
+            min-height: 100vh;
+            background-color: #f0f2f5;
+            overflow: hidden;
         }
 
         .navbar {
@@ -21,8 +22,8 @@
             color: white;
             text-align: center;
             width: 100%;
-            position: fixed; 
-            top: 0; 
+            position: fixed;
+            top: 0;
             z-index: 1000;
             margin-bottom: 60px;
             height: 50px;
@@ -32,17 +33,17 @@
             margin: 0;
             font-size: 24px;
             font-weight: bold;
-            color:white;
+            color: white;
         }
 
         .sidenav {
-            height: calc(100vh - 50px); 
-            width: 200px; 
+            height: calc(100vh - 50px);
+            width: 200px;
             position: fixed;
             z-index: 1;
             top: 50px;
             left: 0;
-            background-color: #111; 
+            background-color: #111;
             padding-top: 20px;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
             overflow-y: auto;
@@ -58,29 +59,29 @@
         }
 
         .sidenav a:hover {
-            background-color: #007bff; 
+            background-color: #007bff;
         }
 
         .main-content {
-            margin-left: 220px; 
-            margin-top: 50px; 
+            margin-left: 220px;
+            margin-top: 50px;
             display: flex;
             justify-content: center;
             align-items: center;
             width: calc(100% - 220px);
             padding: 20px;
-            flex: 1; 
-            overflow: auto; 
-            height: 100vh; 
+            flex: 1;
+            overflow: auto;
+            height: 100vh;
         }
 
         .card {
             width: 100%;
-            max-width: 400px; 
+            max-width: 400px;
             padding: 40px;
-            background-color: #fff; 
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); 
-            border-radius: 12px; 
+            background-color: #fff;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
             margin-right: 160px;
             margin-bottom: 60px;
         }
@@ -121,7 +122,7 @@
         }
 
         .form-group input:focus {
-            border-color: #007bff; 
+            border-color: #007bff;
         }
 
         .btn-primary {
@@ -138,7 +139,7 @@
         }
 
         .btn-primary:hover {
-            background-color: #0056b3; 
+            background-color: #0056b3;
         }
 
         .text-danger {
@@ -153,56 +154,57 @@
             text-align: center;
             padding: 10px 20px;
             position: fixed;
-            bottom: 0; 
+            bottom: 0;
             width: 100%;
             height: 60px;
             left: 0;
         }
     </style>
 </head>
+
 <body>
 
-<div class="navbar">
-    <h1>My Application</h1>
-</div>
+    <div class="navbar">
+        <h1>My Application</h1>
+    </div>
 
-<div class="main-content">
-    <div class="card">
-        <div class="card-body">
-            <h1>Login</h1>
-       
-            <form method="POST" action="{{ route('login') }}" class="form-inline">
-                @csrf
-            
-                <div class="form-group">
-                    <label for="email">Email:</label>
-                    <input type="email" name="email" id="email" class="form-control" placeholder="Enter your email" required>
-                    @error('email')
-                        <span class="text-danger">{{ $message }}</span>
-                    @enderror
-                </div>  
+    <div class="main-content">
+        <div class="card">
+            <div class="card-body">
+                <h1>Login</h1>
 
-                <div class="form-group">
-                    <label for="password">Password:</label>
-                    <input type="password" name="password" id="password" class="form-control" placeholder="Enter your password" required>
-                    @error('password')
-                        <span class="text-danger">{{ $message }}</span>
-                    @enderror
+                <form method="POST" action="{{ route('login') }}" class="form-inline">
+                    @csrf
+
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" name="email" id="email" class="form-control" placeholder="Enter your email"
+                            required>
+                        @error('email')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <input type="password" name="password" id="password" class="form-control"
+                            placeholder="Enter your password" required>
+                        @error('password')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form><br>
+    
+                <div class="mt-3 text-center">
+                    <a href="{{ route('password.request') }}" class="text-primary">Forgot your password?</a>
                 </div>
 
-               
-                <button type="submit" class="btn btn-primary">Login</button>
-            </form><br>
-
-            <div class="mt-3 text-center">
-    <a href="{{ route('password.request') }}" class="text-primary">Forgot your password?</a>
-</div>
-
+            </div>
         </div>
     </div>
-</div>
-<div class="footer">
-    <p>&copy; 2024 My Application. All Rights Reserved.</p>
-</div>
+    <div class="footer">
+        <p>&copy; 2024 My Application. All Rights Reserved.</p>
+    </div>
 </body>
 </html>

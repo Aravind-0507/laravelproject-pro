@@ -9,9 +9,9 @@
 <div class="card">
     <div class="card-body">
         <p style="font-size:20px; font-weight:bold;">Create New User</p>
-        <form action="{{ route('employees.store') }}" class="was-validated" method="POST" novalidate>
+        <form action="{{ route('users.store') }}" class="was-validated" method="POST" novalidate>
             @csrf
-
+           
             <div class="form-group has-validation">
                 <label for="name">Name</label>
                 <input type="text" name="name" id="name"
@@ -123,10 +123,12 @@
                     </span>
                 @endif
             </div>
-
-            <br>
+            <div>
+  
+            </div>
+            <br>    
             <button type="submit" class="btn btn-primary">Create User</button>
-            <a href="{{ route('employees.index') }}" class="btn btn-success">Back</a>
+            <a href="{{ route('users.index') }}" class="btn btn-success">Back</a>
         </form>
     </div>
 </div>

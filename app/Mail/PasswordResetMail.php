@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Mail;
-use app\Models\Employee;
+
+use App\Models\User; // Changed 'app' to 'App' for the correct namespace
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -10,21 +11,20 @@ class PasswordResetMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $employee;
+    public $user; 
     public $token;
 
-    public function __construct(Employee $employee)
+    public function __construct(User $user)
     {
-        $this->employee= $employee;
-        
+        $this->user = $user; 
     }
 
     public function build()
     {
         return $this->view('emails.password_reset')
                     ->with([
-                        'name' => $this->employee->name,
-                        'resetLink' => url('/password/reset', $this->token), // Send the reset token in the URL
+                        'name' => $this->user->name, 
+                        'resetLink' => url('/password/reset', $this->token), 
                     ]);
     }
 }

@@ -1,11 +1,12 @@
 <?php
-
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\namespace;
+use Illuminate\Database\Eloquent\Model;
+use App\Models\Stock;
+
 
 class User extends Authenticatable
 {
@@ -16,7 +17,7 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $fillable = ['name', 'email', 'password', 'joining_date', 'phone', 'role', 'is_active', 'password_reset_sent_at'];
+    protected $fillable = ['name', 'email', 'password', 'joining_date', 'phone', 'role', 'is_active', 'expires_at'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -46,6 +47,7 @@ class User extends Authenticatable
 
     public function stocks()
     {
-        return $this->belongsToMany(Stock::class)->withPivot('assigned_quantity');
+        return $this->belongsToMany(Stock::class, 'stock_user')
+            ->withPivot('assigned_quantity', 'is_active');
     }
 }

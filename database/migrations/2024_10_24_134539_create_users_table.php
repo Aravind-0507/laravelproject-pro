@@ -16,9 +16,9 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->date('joining_date')->nullable();
-            $table->integer('phone');
+            $table->bigInteger('phone')->nullable(); // Make phone nullable for flexibility
             $table->boolean('is_active')->default(false);
-            $table->integer('role')->default(2);
+            $table->integer('role')->default(2); // Default role is user (2)
             $table->string('password'); 
             $table->timestamps();
         });

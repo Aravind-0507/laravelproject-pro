@@ -10,15 +10,15 @@ class WelcomeEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $employee;
+    public $user; // Changed from $employee to $user
 
-    public function __construct($employee)
+    public function __construct($user) // Changed parameter name from $employee to $user
     {
-        $this->employee = $employee;
+        $this->user = $user; // Updated property assignment
     }
 
     public function build() 
     {
-        return $this->view('emails.Welcome')->with('employee', $this->employee);
+        return $this->view('emails.Welcome')->with('user', $this->user); // Changed from 'employee' to 'user'
     }
 }

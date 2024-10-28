@@ -10,8 +10,7 @@ class WelcomeController extends Controller
     
     public function index()
     {
-        // This will return the welcome view
-        return view('employees.index');
+        return view('users.index');
     }
     
     public function logout()

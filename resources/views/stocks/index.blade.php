@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="sidenav">
-    <a href="{{ route('employees.index') }}">Users List</a><br>
+    <a href="{{ route('users.index') }}">Users List</a><br>
     <a href="{{ route('stocks.index') }}">Stock</a>
 </div>
 
@@ -155,7 +155,7 @@
 @endif
 
 @php
-    $hasZeroQuantity = $stocks->filter(function($stock) {
+    $hasZeroQuantity = $stocks->filter(function ($stock) {
         return $stock->quantity == 0;
     })->isNotEmpty();
 @endphp
@@ -169,7 +169,8 @@
 
 <div class="row">
     <div class="col-12 d-flex justify-content-between mb-3">
-        <input type="text" id="search" placeholder="Search stocks..." oninput="searchTable()" class="form-control" style="width: 400px;">
+        <input type="text" id="search" placeholder="Search stocks..." oninput="searchTable()" class="form-control"
+            style="width: 400px;">
         <div class="text-center">
             <a href="{{ route('stocks.create') }}" class="btn btn-success">Add Stock</a>
         </div>
@@ -211,8 +212,11 @@
                                 </td>
 
                                 <td>
-                                    <a href="{{ route('stocks.edit', $stock->id) }}" class="btn btn-primary btn-sm mx-2">Edit</a>
-                                    <form action="{{ route('stocks.destroy', $stock->id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this stock?');">
+                                    <a href="{{ route('stocks.edit', $stock->id) }}"
+                                        class="btn btn-primary btn-sm mx-2">Edit</a>
+                                    <form action="{{ route('stocks.destroy', $stock->id) }}" method="POST"
+                                        style="display: inline;"
+                                        onsubmit="return confirm('Are you sure you want to delete this stock?');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm">Delete</button>

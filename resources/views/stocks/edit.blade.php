@@ -99,7 +99,6 @@
         <div class="mb-3">
             <label for="status" class="form-label">Status</label>
             <select name="status" class="form-control" required>
-                <option value="" disabled {{ is_null($stock->is_active) ? 'selected' : '' }}>Select Status</option>
                 <option value="active" {{ $stock->is_active === 'active' ? 'selected' : '' }}>Active</option>
                 <option value="inactive" {{ $stock->is_active === 'inactive' ? 'selected' : '' }}>Inactive</option>
             </select>

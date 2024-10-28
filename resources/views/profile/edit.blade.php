@@ -122,7 +122,7 @@
 
         <button type="submit">Update Profile</button>
         <div class="text-center"><br>
-            <a class="btn btn-danger" href="{{ route('employees.index') }}">Back</a>
+            <a class="btn btn-danger" href="{{ route('users.index') }}">Back</a>
         </div>
     </form>
 </body>

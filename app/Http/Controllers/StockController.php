@@ -1,12 +1,20 @@
 <?php
 namespace App\Http\Controllers;
-
+use App\Services\StockService;
 use App\Models\Stock;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class StockController extends Controller
 {
+
+    protected $stockService;
+
+    public function __construct(StockService $stockService)
+    {
+        $this->stockService = $stockService;
+    }
     public function index()
     {
         $users = User::all();
@@ -57,6 +65,7 @@ class StockController extends Controller
         ]);
         $stock = Stock::findOrFail($id);
         $stock->update($request->all());
+        
         return redirect()->route('stocks.index')->with('success', 'Stock updated successfully!');
     }
 
@@ -98,4 +107,6 @@ class StockController extends Controller
         $outOfStockStocks = Stock::where('quantity', '>', 50)->get();
         return view('stocks.assign', compact('user', 'stocks', 'outOfStockStocks'));
     }
+    
+    
 }

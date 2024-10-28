@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-use App\Models\Employee;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,16 +12,11 @@ class Stock extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class);
-    }
-
-    public function employees()
-    {
-        return $this->hasMany(Employee::class);
+        return $this->belongsToMany(User::class,'stock_user')->withPivot('assigned_quantity','is_active');
     }
 
     public function stocks()
     {
-        return $this->belongsToMany(Stock::class)->withPivot('assigned_quantity');
+        return $this->belongsToMany(Stock::class, 'stock_user')->withPivot('assigned_quantity');
     }
 }

@@ -11,17 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->timestamp('expires_at')->nullable(); // Add the expires_at column as nullable
+        Schema::create('stocks', function (Blueprint $table) {
+        $table->id();
+        $table->string('name');
+        $table->integer('quantity');
+        $table->enum('status', ['active', 'inactive'])->default('active');
+        $table->timestamps();
         });
-    } 
+    }
+
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('expires_at');
-        });
+        Schema::dropIfExists('stocks');
     }
 };
