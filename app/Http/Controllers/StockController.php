@@ -65,7 +65,7 @@ class StockController extends Controller
         ]);
         $stock = Stock::findOrFail($id);
         $stock->update($request->all());
-        
+
         return redirect()->route('stocks.index')->with('success', 'Stock updated successfully!');
     }
 
@@ -107,6 +107,4 @@ class StockController extends Controller
         $outOfStockStocks = Stock::where('quantity', '>', 50)->get();
         return view('stocks.assign', compact('user', 'stocks', 'outOfStockStocks'));
     }
-    
-    
 }

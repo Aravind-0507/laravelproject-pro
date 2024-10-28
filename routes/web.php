@@ -73,7 +73,7 @@ Route::post('/login', [LoginController::class, 'login'])->name('login.post');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/home', [LoginController::class, 'home'])->name('home'); 
 
-Route::get('menu', [UsersController::class, 'menu'])->name('users.menu');
+
 Route::get('users/{user}/assign-stocks/{stockId}', [UsersController::class, 'assignStocks'])->name('users.assign_stocks');
 Route::post('/users/store-stock', [UsersController::class, 'storeStock'])->name('users.store_stock');
 Route::get('/assign-stock', [UsersController::class, 'showAssignStockForm'])->name('users.assign_stocks');

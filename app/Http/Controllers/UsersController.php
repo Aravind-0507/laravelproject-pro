@@ -121,18 +121,14 @@ class UsersController extends Controller
         return redirect()->route('users.index')->with('success', 'User deleted successfully.');
     }
 
-    // public function menu()
-    // {
-    //     $stocks = $this->stockService->getAssignedStocks();
-    //     return view('users.menu', compact('stocks'));
-    // }
+
 
     public function assignStocks(User $user, $stockId)
     {
         $stocks = Stock::where('quantity', '<', 50)->get();
         $stocks = Stock::all();
-        $selectedStock = Stock::findOrFail($stockId); 
-        return view('users.assign_stocks', compact('stocks', 'selectedStock','user'));
+        $selectedStock = Stock::findOrFail($stockId);
+        return view('users.assign_stocks', compact('stocks', 'selectedStock', 'user'));
     }
     public function storeStock(Request $request)
     {
@@ -141,7 +137,7 @@ class UsersController extends Controller
             'assigned_quantity' => 'required|integer|min:1',
         ]);
         $stock = Stock::findOrFail($request->stock_id);
-        $user = auth()->user(); 
+        $user = auth()->user();
         if ($stock->quantity >= $request->assigned_quantity) {
             $stock->quantity -= $request->assigned_quantity;
             $stock->save();
@@ -153,14 +149,14 @@ class UsersController extends Controller
         }
     }
     public function menu()
-{
-    $user = auth()->user();
-    if (!$user) {
-        return redirect()->route('login')->withErrors(['You must be logged in to view this page.']);
+    {
+        $user = auth()->user();
+        if (!$user) {
+            return redirect()->route('login')->withErrors(['You must be logged in to view this page.']);
+        }
+        $stocks = $user->stocks;
+        return view('user_menu', compact('stocks', 'user'));
     }
-    $stocks = $user->stocks;
-    return view('user_menu', compact('stocks', 'user'));
-}
 
     public function showAssignStockForm()
     {
