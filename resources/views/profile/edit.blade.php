@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -37,7 +36,7 @@
             display: block;
             margin: 10px 0 5px;
         }
-
+        
         input[type="text"],
         input[type="email"],
         input[type="password"] {

@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Jobs\SendUserWelcomeEmail;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -62,6 +61,7 @@ class UsersController extends Controller
             }
         }
         SendUserWelcomeEmail::dispatch($user);
+        
         return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
     public function update(Request $request, $id)
@@ -90,7 +90,8 @@ class UsersController extends Controller
             $stock = Stock::findOrFail($stockId);
             $assignedQuantity = $data['assigned_quantities'][$key];
             $newQuantity = $stock->quantity - $assignedQuantity;
-            if ($newQuantity < 0) {
+            if ($newQuantity < 0) 
+            {
                 return redirect()->back()->withErrors(['error' => 'Not enough stock available for ' . $stock->name]);
             }
             $stock->quantity = $newQuantity;
@@ -120,34 +121,37 @@ class UsersController extends Controller
         $user->delete();
         return redirect()->route('users.index')->with('success', 'User deleted successfully.');
     }
+    public function assignStocks(User $user)
+{
+    $stocks = Stock::where('quantity', '<', 50)->get();
+    return view('users.assign_stocks', compact('stocks', 'user'));
+}
+public function storeStock(Request $request)
+{
+    $stocks = $request->stocks; 
+    $quantities = $request->assigned_quantities; 
 
-
-
-    public function assignStocks(User $user, $stockId)
-    {
-        $stocks = Stock::where('quantity', '<', 50)->get();
-        $stocks = Stock::all();
-        $selectedStock = Stock::findOrFail($stockId);
-        return view('users.assign_stocks', compact('stocks', 'selectedStock', 'user'));
-    }
-    public function storeStock(Request $request)
-    {
+    foreach ($stocks as $index => $stockId) {
         $request->validate([
-            'stock_id' => 'required|exists:stocks,id',
-            'assigned_quantity' => 'required|integer|min:1',
+            "stocks.$index" => 'required|exists:stocks,id',
+            "assigned_quantities.$index" => 'required|integer|min:1|max:50', 
         ]);
-        $stock = Stock::findOrFail($request->stock_id);
-        $user = auth()->user();
-        if ($stock->quantity >= $request->assigned_quantity) {
-            $stock->quantity -= $request->assigned_quantity;
-            $stock->save();
-            $user->stocks()->attach($stock->id, ['assigned_quantity' => $request->assigned_quantity]);
 
-            return redirect()->route('users.menu')->with('success', 'Stock assigned successfully!');
+        $stock = Stock::findOrFail($stockId);
+        $assignedQuantity = $quantities[$index];
+        if ($stock->quantity >= $assignedQuantity) {
+            $stock->quantity -= $assignedQuantity;
+            $stock->save();
+            $user = auth()->user();
+            $user->stocks()->attach($stock->id, ['assigned_quantity' => $assignedQuantity]);
         } else {
-            return back()->withErrors(['assigned_quantity' => 'Not enough stock available.']);
+            return redirect()->back()->withErrors(['assigned_quantities.' . $index => 'Not enough stock available for ' . $stock->name . '.']);
         }
     }
+
+    return redirect()->route('users.menu')->with('success', 'Stocks assigned successfully!');
+}
+
     public function menu()
     {
         $user = auth()->user();
@@ -157,11 +161,11 @@ class UsersController extends Controller
         $stocks = $user->stocks;
         return view('user_menu', compact('stocks', 'user'));
     }
-
-    public function showAssignStockForm()
+    public function showAssignStockForm(User $user)
     {
         $stocks = Stock::where('quantity', '<=', 50)->get();
-        return view('users.assign_stocks', compact('stocks'));
+        $availableStocks = Stock::where('quantity', '<=', 50)->get();
+        return view('users.assign_stocks', compact('stocks','user'));
     }
     public function getData()
     {

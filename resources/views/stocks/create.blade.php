@@ -87,10 +87,19 @@
 
     <form action="{{ route('stocks.store') }}" method="POST">
         @csrf
-        <div class="mb-3">
-            <label for="name" class="form-label">Stock Name</label>
-            <input type="text" name="name" class="form-control" required>
-        </div>
+        <div class="form-group">
+    <label for="name">Stock Name</label>
+    <input type="text" name="name" id="name" 
+           class="form-control @error('name') is-invalid @enderror" 
+           value="{{ old('name') }}" required>
+
+    @error('name')
+        <span class="invalid-feedback" role="alert">
+            <strong>{{ $message }}</strong>
+        </span>
+    @enderror
+</div>
+
         <div class="mb-3">
             <label for="quantity" class="form-label">Quantity</label>
             <input type="number" name="quantity" class="form-control" required>

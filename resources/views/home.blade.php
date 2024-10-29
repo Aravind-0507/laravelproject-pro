@@ -195,7 +195,7 @@
                     </div>
                     <button type="submit" class="btn btn-primary">Login</button>
                 </form><br>
-    
+
                 <div class="mt-3 text-center">
                     <a href="{{ route('password.request') }}" class="text-primary">Forgot your password?</a>
                 </div>
@@ -207,4 +207,5 @@
         <p>&copy; 2024 My Application. All Rights Reserved.</p>
     </div>
 </body>
+
 </html>

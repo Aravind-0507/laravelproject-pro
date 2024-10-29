@@ -5,7 +5,6 @@ use App\Models\Stock;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
 class StockController extends Controller
 {
 
@@ -31,7 +30,7 @@ class StockController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:stocks,name',
             'quantity' => 'required|integer',
             'is_active' => 'boolean',
         ]);

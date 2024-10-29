@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+
 <div class="card">
     <div class="card-body">
         <h5 style="font-size:20px; font-weight:bold;">User Details</h5>
@@ -39,14 +40,14 @@
                         <div class="form-group">
                             <label for="assigned_quantity_{{ $stock->id }}">Assigned Quantity:</label>
                             <input type="number" id="assigned_quantity_{{ $stock->id }}" class="form-control"
-                                value="{{ $stock->pivot->assigned_quantity }}" readonly>
+                            value="{{ $stock->pivot->assigned_quantity }}" readonly>
                         </div>
                     </li>
                 @endforeach
             </ul>
         </div>
-
         <a href="{{ route('users.index') }}" class="btn btn-success">Back</a>
     </div>
 </div>
+
 @endsection

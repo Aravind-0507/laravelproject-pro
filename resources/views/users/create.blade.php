@@ -11,7 +11,7 @@
         <p style="font-size:20px; font-weight:bold;">Create New User</p>
         <form action="{{ route('users.store') }}" class="was-validated" method="POST" novalidate>
             @csrf
-           
+
             <div class="form-group has-validation">
                 <label for="name">Name</label>
                 <input type="text" name="name" id="name"
@@ -60,32 +60,32 @@
                 @endif
             </div>
 
-            <div class="form-group has-validation">
+            <div class="form-group">
                 <label for="stocks">Select Stocks:</label>
-                <select name="stocks[]" id="stocks" multiple class="form-control" required>
-                    @foreach($stocks as $stock)
-                        <option value="{{ $stock->id }}">
-                            {{ $stock->name }} (Available: {{ $stock->quantity }})
-                        </option>
-                    @endforeach
-                </select>
-                @if($errors->has('stocks'))
-                    <span class="invalid-feedback">
-                        <strong>{{ $errors->first('stocks') }}</strong>
-                    </span>
-                @endif
-            </div>
+                <div id="stock-quantity-container">
+                    <div class="d-flex align-items-center mb-2">
+                        <select name="stocks[]" class="form-control me-2 @error('stocks') is-invalid @enderror"
+                            required>
+                            <option value="" disabled selected>Select Stock</option>
+                            @foreach($stocks as $stock)
+                                <option value="{{ $stock->id }}">{{ $stock->name }} (Available: {{ $stock->quantity }})
+                                </option>
+                            @endforeach
+                        </select>
 
-            <div id="assigned-quantities-container" class="form-group">
-                <label>Assigned Quantities:</label>
-                <input type="number" name="assigned_quantities[0]" class="form-control" required
-                    placeholder="Enter quantity for selected stock">
-                <button type="button" id="add-quantity" class="btn btn-secondary mt-2">Add Another Quantity</button>
-                @if($errors->has('assigned_quantities'))
-                    <span class="invalid-feedback">
-                        <strong>{{ $errors->first('assigned_quantities') }}</strong>
+                        <input type="number" name="assigned_quantities[]"
+                            class="form-control me-2 @error('assigned_quantities') is-invalid @enderror" required
+                            placeholder="Quantity">
+                        <button type="button" class="btn btn-danger" onclick="removeStockRow(this)">Remove</button>
+                    </div>
+                </div>
+                <button type="button" id="add-stock" class="btn btn-secondary mt-2" onclick="addStockRow()">Add Another
+                    Stock</button>
+                @error('stocks')
+                    <span class="invalid-feedback d-block">
+                        <strong>{{ $message }}</strong>
                     </span>
-                @endif
+                @enderror
             </div>
 
             <div class="form-group has-validation">
@@ -124,9 +124,9 @@
                 @endif
             </div>
             <div>
-  
+
             </div>
-            <br>    
+            <br>
             <button type="submit" class="btn btn-primary">Create User</button>
             <a href="{{ route('users.index') }}" class="btn btn-success">Back</a>
         </form>
@@ -146,4 +146,40 @@
     });
 </script>
 
+<script>
+    function addStockRow() {
+        const stockQuantityContainer = document.getElementById('stock-quantity-container');
+        const newRow = document.createElement('div');
+        newRow.className = 'd-flex align-items-center mb-2';
+
+        const newStockSelect = document.createElement('select');
+        newStockSelect.name = 'stocks[]';
+        newStockSelect.className = 'form-control me-2';
+        newStockSelect.required = true;
+        newStockSelect.innerHTML = `
+            <option value="" disabled selected>Select Stock</option>
+            @foreach($stocks as $stock)
+                <option value="{{ $stock->id }}">{{ $stock->name }} (Available: {{ $stock->quantity }})</option>
+            @endforeach
+        `;
+
+        const newQuantityInput = document.createElement('input');
+        newQuantityInput.type = 'number';
+        newQuantityInput.name = 'assigned_quantities[]';
+        newQuantityInput.className = 'form-control me-2';
+        newQuantityInput.required = true;
+        newQuantityInput.placeholder = 'Quantity';
+
+        const removeButton = document.createElement('button');
+        removeButton.type = 'button';
+        removeButton.className = 'btn btn-danger';
+        removeButton.innerText = 'Remove';
+        removeButton.onclick = () => newRow.remove();
+
+        newRow.appendChild(newStockSelect);
+        newRow.appendChild(newQuantityInput);
+        newRow.appendChild(removeButton);
+        stockQuantityContainer.appendChild(newRow);
+    }
+</script>
 @endsection

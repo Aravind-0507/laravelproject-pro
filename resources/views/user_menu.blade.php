@@ -51,7 +51,8 @@
             margin: 20px 0;
         }
 
-        th, td {
+        th,
+        td {
             border: 1px solid #ddd;
             padding: 12px;
             text-align: left;
@@ -91,47 +92,49 @@
         }
     </style>
 </head>
+
 <body>
-
-</body>
+    
 <div class="container">
-        <h1>User Menu</h1>
+    <h1>User Stocks</h1>
 
-        @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        <h2>Assigned Stocks</h2>
-        <a href="{{ route('users.assign_stocks') }}" class="btn">Re-Assign Stock</a>
-        <table>
-            <thead>
-                <tr>
-                    <th>Stock Name</th>
-                    <th>Quantity</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                @if ($stocks->isEmpty())
-                    <tr>
-                        <td colspan="3" class="text-center">No stocks assigned yet.</td>
-                    </tr>
-                @else
-                    @foreach ($stocks as $stock)
-                        <tr>
-                            <td><strong>{{ $stock->name }}</strong></td>
-                            <td>{{ $stock->pivot->assigned_quantity }}</td>
-                            <td>{{ $stock->status }}</td>
-                        </tr>
-                    @endforeach
-                @endif
-            </tbody>
-        </table>
-        <div class="back-link">
-            <a href="{{ route('home') }}" class="btn btn-secondary">Back to Login</a>
+    @if (session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
         </div>
+    @endif
+
+    <div class="welcome-message">Welcome, {{ $user->name }}!</div>
+    <a href="{{ route('users.assign_stocks', $user->id) }}" class="btn">Re-Assign Stock</a>
+    <table>
+        <thead>
+            <tr>
+                <th>Stock Name</th>
+                <th>Quantity</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @if ($stocks->isEmpty())
+                <tr>
+                    <td colspan="3" class="text-center">No stocks assigned yet.</td>
+                </tr>
+            @else
+                @foreach ($stocks as $stock)
+                    <tr>
+                        <td><strong>{{ $stock->name }}</strong></td>
+                        <td>{{ $stock->pivot->assigned_quantity }}</td>
+                        <td>{{ $stock->status }}</td>
+                    </tr>
+                @endforeach
+                @endif
+        </tbody>
+    </table>
+    <div class="back-link">
+        <a href="{{ route('home') }}" class="btn btn-secondary">Back to Login</a>
     </div>
+</div>
+</body>
+
 </html>
