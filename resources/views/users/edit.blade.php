@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+
 <div class="card">
     <div class="card-body">
         <p style="font-size:20px; font-weight:bold;">Edit User</p>
